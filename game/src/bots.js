@@ -45,6 +45,20 @@ function buildBody(team) {
   head.position.y = 1.62;
   const helmet = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.12, 0.3), teamMat);
   helmet.position.y = 1.74;
+  // Kit detail: a glowing visor slit, shoulder pads, a belt and a back pack,
+  // so a fighter reads as equipped crew at screenshot distance, not a bare
+  // mannequin. All trim and team colours, all behind the hit spheres' shape.
+  const visor = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.05, 0.02), glowMat);
+  visor.position.set(0, 1.64, -0.155);
+  const padGeo = new THREE.BoxGeometry(0.2, 0.12, 0.34);
+  const padL = new THREE.Mesh(padGeo, teamMat);
+  padL.position.set(-0.36, 1.42, 0);
+  const padR = new THREE.Mesh(padGeo, teamMat);
+  padR.position.set(0.36, 1.42, 0);
+  const belt = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.09, 0.32), darkMat);
+  belt.position.y = 0.82;
+  const pack = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.16), trimMat);
+  pack.position.set(0, 1.16, 0.23);
   const gun = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.09, 0.52), trimMat);
   gun.position.set(0.2, 1.3, -0.32);
   const flash = new THREE.Mesh(
@@ -53,7 +67,7 @@ function buildBody(team) {
   );
   flash.position.set(0.2, 1.3, -0.66);
   flash.visible = false;
-  upper.add(torso, vest, strip, head, helmet, gun, flash);
+  upper.add(torso, vest, strip, head, helmet, visor, padL, padR, belt, pack, gun, flash);
   group.add(legL, legR, upper);
   group.traverse((mesh) => {
     if (mesh.isMesh) mesh.castShadow = true;

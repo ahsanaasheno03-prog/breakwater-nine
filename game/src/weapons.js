@@ -158,17 +158,29 @@ export function buildViewModel(id) {
   if (id === 'sidearm') {
     model.add(part(new THREE.BoxGeometry(0.055, 0.09, 0.2), darkMat, 0, -0.03, -0.05));
     model.add(part(new THREE.BoxGeometry(0.045, 0.05, 0.24), bodyMat, 0, 0.03, -0.08));
+    model.add(part(new THREE.BoxGeometry(0.02, 0.03, 0.02), darkMat, 0, 0.07, 0.02)); // rear sight
+    model.add(part(new THREE.BoxGeometry(0.03, 0.04, 0.1), gripMat, 0, -0.005, -0.22)); // muzzle step
   } else if (id === 'smg') {
     model.add(part(new THREE.BoxGeometry(0.07, 0.11, 0.34), bodyMat, 0, 0, -0.08));
     model.add(part(new THREE.BoxGeometry(0.02, 0.014, 0.08), accentMat, 0, 0.062, -0.22)); // top stripe
     model.add(part(new THREE.BoxGeometry(0.04, 0.04, 0.2), gripMat, 0, 0.02, -0.32));
     model.add(part(new THREE.BoxGeometry(0.05, 0.16, 0.06), darkMat, 0, -0.12, -0.06));
     model.add(part(new THREE.BoxGeometry(0.06, 0.07, 0.16), gripMat, 0, -0.03, 0.16));
+    model.add(part(new THREE.BoxGeometry(0.052, 0.052, 0.15), darkMat, 0, 0.02, -0.44)); // suppressor
+    const smgMag = part(new THREE.BoxGeometry(0.045, 0.17, 0.055), gripMat, 0, -0.13, -0.02);
+    smgMag.rotation.x = 0.16;
+    model.add(smgMag);
   } else if (id === 'dmr') {
     model.add(part(new THREE.BoxGeometry(0.06, 0.09, 0.5), darkMat, 0, 0, -0.14));
     model.add(part(new THREE.BoxGeometry(0.03, 0.03, 0.34), gripMat, 0, 0.03, -0.52));
     model.add(part(new THREE.BoxGeometry(0.05, 0.07, 0.12), bodyMat, 0, 0.09, -0.1)); // scope block
     model.add(part(new THREE.BoxGeometry(0.05, 0.14, 0.06), gripMat, 0, -0.11, -0.02));
+    model.add(part(new THREE.BoxGeometry(0.058, 0.058, 0.05), bodyMat, 0, 0.09, -0.19)); // scope bell
+    const legL = part(new THREE.BoxGeometry(0.012, 0.12, 0.012), darkMat, -0.03, -0.08, -0.55);
+    legL.rotation.z = 0.3;
+    const legR = part(new THREE.BoxGeometry(0.012, 0.12, 0.012), darkMat, 0.03, -0.08, -0.55);
+    legR.rotation.z = -0.3;
+    model.add(legL, legR); // folded bipod
   } else {
     // carbine
     model.add(part(new THREE.BoxGeometry(0.075, 0.1, 0.44), bodyMat, 0, 0, -0.1));
@@ -177,6 +189,12 @@ export function buildViewModel(id) {
     model.add(part(new THREE.BoxGeometry(0.05, 0.15, 0.06), darkMat, 0, -0.12, -0.08));
     model.add(part(new THREE.BoxGeometry(0.065, 0.08, 0.2), gripMat, 0, -0.02, 0.24));
     model.add(part(new THREE.BoxGeometry(0.02, 0.06, 0.02), darkMat, 0, 0.09, -0.3)); // front post
+    model.add(part(new THREE.BoxGeometry(0.03, 0.05, 0.05), darkMat, 0, 0.085, 0.02)); // rear sight
+    model.add(part(new THREE.BoxGeometry(0.012, 0.03, 0.26), gripMat, 0.045, -0.01, -0.18)); // side rail
+    model.add(part(new THREE.BoxGeometry(0.055, 0.055, 0.07), darkMat, 0, 0.03, -0.58)); // muzzle brake
+    const fore = part(new THREE.BoxGeometry(0.045, 0.1, 0.05), gripMat, 0, -0.09, -0.38);
+    fore.rotation.x = 0.25; // angled foregrip
+    model.add(fore);
   }
   model.position.set(0.23, -0.19, -0.35);
   return model;

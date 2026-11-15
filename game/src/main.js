@@ -842,6 +842,9 @@ function runShot(name) {
     const target = runners[0];
     stageBot(target, 0.2, -5.5, Math.PI / 2 - 0.15, 'carbine');
     stageBot(runners[1], 6, 3.5, 0, 'smg');
+    // A second Runner deep in the sight line, past the target: the frame
+    // gets a near fight and a far one, not a lone figure in an empty lane.
+    stageBot(runners[2], 5.8, -8.8, Math.PI / 2, 'smg');
     match.charge.carrier = runners[1];
     match.charge.pos.copy(runners[1].pos);
     settle(2);
