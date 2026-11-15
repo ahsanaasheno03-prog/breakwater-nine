@@ -69,17 +69,17 @@ function groundTexture() {
   canvas.width = 1024;
   canvas.height = 768;
   const g = canvas.getContext('2d');
-  g.fillStyle = '#232a31';
+  g.fillStyle = '#333d47';
   g.fillRect(0, 0, 1024, 768);
   for (let i = 0; i < 9000; i += 1) {
-    g.fillStyle = `rgba(${Math.random() > 0.5 ? '255,255,255' : '0,0,0'},${Math.random() * 0.05})`;
+    g.fillStyle = `rgba(${Math.random() > 0.5 ? '255,255,255' : '0,0,0'},${Math.random() * 0.06})`;
     g.fillRect(Math.random() * 1024, Math.random() * 768, 2, 2);
   }
   const px = (x) => ((x - BOUNDS.minX) / (BOUNDS.maxX - BOUNDS.minX)) * 1024;
   const pz = (z) => ((z - BOUNDS.minZ) / (BOUNDS.maxZ - BOUNDS.minZ)) * 768;
   const sx = 1024 / (BOUNDS.maxX - BOUNDS.minX);
-  g.strokeStyle = 'rgba(236,231,219,0.5)';
-  g.lineWidth = 3;
+  g.strokeStyle = 'rgba(236,231,219,0.8)';
+  g.lineWidth = 4;
   g.setLineDash([18, 14]);
   for (const laneX of [-14, 0, 14]) {
     g.beginPath();
@@ -90,11 +90,11 @@ function groundTexture() {
   g.setLineDash([]);
   for (const [siteX, letter] of [[-14, 'A'], [14, 'B']]) {
     g.strokeStyle = PALETTE.accent;
-    g.lineWidth = 5;
+    g.lineWidth = 6;
     g.beginPath();
     g.arc(px(siteX), pz(-10.5), 3.4 * sx, 0, Math.PI * 2);
     g.stroke();
-    g.fillStyle = 'rgba(255,140,58,0.85)';
+    g.fillStyle = 'rgba(255,140,58,0.95)';
     g.font = 'bold 64px system-ui, sans-serif';
     g.textAlign = 'center';
     g.textBaseline = 'middle';
@@ -143,7 +143,7 @@ export function createWorld(scene) {
     }),
   );
   scene.add(sky);
-  scene.fog = new THREE.Fog(new THREE.Color('#2a2c30'), 30, 95);
+  scene.fog = new THREE.Fog(new THREE.Color('#574434'), 36, 120);
 
   // Ground slab.
   const ground = new THREE.Mesh(
@@ -233,7 +233,7 @@ export function createWorld(scene) {
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 4.6, 8), lampMat);
     pole.position.set(x, 2.3, z);
     register(pole, { shoot: false });
-    const lamp = new THREE.PointLight(new THREE.Color(PALETTE.accent), 30, 17, 1.8);
+    const lamp = new THREE.PointLight(new THREE.Color(PALETTE.accent), 46, 20, 1.8);
     lamp.position.set(x, 4.5, z);
     scene.add(lamp);
     const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(PALETTE.accent) }));
@@ -243,8 +243,8 @@ export function createWorld(scene) {
 
   // Light: a low warm key (the setting sun off the water), a cool fill, and a
   // sky/ground gradient so shadows never go black.
-  scene.add(new THREE.HemisphereLight(new THREE.Color('#6d81a0'), new THREE.Color('#241a12'), 1.25));
-  const sun = new THREE.DirectionalLight(new THREE.Color('#ffb37a'), 2.3);
+  scene.add(new THREE.HemisphereLight(new THREE.Color('#8fa8c8'), new THREE.Color('#3a2a1a'), 1.6));
+  const sun = new THREE.DirectionalLight(new THREE.Color('#ffb37a'), 2.8);
   sun.position.set(-18, 16, 10);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -255,7 +255,7 @@ export function createWorld(scene) {
   sun.shadow.camera.far = 70;
   sun.shadow.bias = -0.0006;
   scene.add(sun, sun.target);
-  const fill = new THREE.DirectionalLight(new THREE.Color('#7d94b8'), 0.9);
+  const fill = new THREE.DirectionalLight(new THREE.Color('#7d94b8'), 1.2);
   fill.position.set(14, 10, -12);
   scene.add(fill);
 

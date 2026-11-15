@@ -253,13 +253,15 @@ export function createHud() {
       const X = (x) => ox + x * scale;
       const Y = (z) => oy + z * scale;
       minimap.clearRect(0, 0, W, H);
-      minimap.fillStyle = 'rgba(13,18,25,0.9)';
+      minimap.fillStyle = 'rgba(16,23,32,0.94)';
       minimap.fillRect(0, 0, W, H);
-      minimap.fillStyle = PALETTE.hairline;
+      minimap.fillStyle = PALETTE.muted;
+      minimap.globalAlpha = 0.5;
       for (const c of world.colliders) {
         if (c.min.y > 1.6) continue;
         minimap.fillRect(X(c.min.x), Y(c.min.z), (c.max.x - c.min.x) * scale, (c.max.z - c.min.z) * scale);
       }
+      minimap.globalAlpha = 1;
       for (const site of [world.sites.A, world.sites.B]) {
         minimap.strokeStyle = PALETTE.accent;
         minimap.lineWidth = 1.5;
@@ -281,7 +283,7 @@ export function createHud() {
         if (!f.alive || f.isPlayer || f.team !== 'warden') continue;
         minimap.fillStyle = PALETTE.warden;
         minimap.beginPath();
-        minimap.arc(X(f.pos.x), Y(f.pos.z), 2.6, 0, Math.PI * 2);
+        minimap.arc(X(f.pos.x), Y(f.pos.z), 3, 0, Math.PI * 2);
         minimap.fill();
       }
       // The player arrow, pointing where they face.
@@ -290,9 +292,9 @@ export function createHud() {
       minimap.rotate(Math.atan2(player.forward.x, -player.forward.z));
       minimap.fillStyle = PALETTE.ink;
       minimap.beginPath();
-      minimap.moveTo(0, -5);
-      minimap.lineTo(3.6, 4);
-      minimap.lineTo(-3.6, 4);
+      minimap.moveTo(0, -6);
+      minimap.lineTo(4.2, 4.6);
+      minimap.lineTo(-4.2, 4.6);
       minimap.closePath();
       minimap.fill();
       minimap.restore();

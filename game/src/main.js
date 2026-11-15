@@ -50,6 +50,10 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+// Filmic tone mapping with a gentle exposure lift: the dusk scene keeps its
+// mood, but shadow detail and the sodium highlights stop crushing to black.
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.12;
 document.getElementById('game').appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -794,6 +798,7 @@ function runShot(name) {
     match.phase = 'live';
     match.round = 1;
     player.placeAt(new THREE.Vector3(0.5, 0, -12.6), Math.PI - 0.15);
+    player.state.pitch = 0.05;
     stageBot(wardens[0], -4.5, -9, Math.PI, 'carbine');
     stageBot(wardens[1], 5, -10, Math.PI, 'carbine');
     stageBot(runners[0], -6, 2, 0, 'carbine');
@@ -810,7 +815,8 @@ function runShot(name) {
     giveWeapon(playerFighter.loadout, 'carbine');
     playerFighter.loadout.current = 'carbine';
     playerFighter.loadout.grenades.frag = 1;
-    player.placeAt(world.spawns.warden[0], Math.PI);
+    player.placeAt(world.spawns.warden[0], Math.PI - 0.28);
+    player.state.pitch = 0.02;
     stageBot(wardens[0], -1.8, -14.4, Math.PI, 'carbine');
     stageBot(runners[0], -5, 14, 0, 'smg');
     hud.openBuy(3, buyItems(), match.money, () => {}, () => {});
@@ -834,7 +840,7 @@ function runShot(name) {
     stageBot(wardens[0], -4.2, -8.6, -Math.PI / 2, 'carbine');
     stageBot(wardens[1], -3, -11, Math.PI, 'dmr');
     const target = runners[0];
-    stageBot(target, 1.5, -5.6, Math.PI / 2 - 0.15, 'carbine');
+    stageBot(target, 0.2, -5.5, Math.PI / 2 - 0.15, 'carbine');
     stageBot(runners[1], 6, 3.5, 0, 'smg');
     match.charge.carrier = runners[1];
     match.charge.pos.copy(runners[1].pos);
@@ -843,7 +849,7 @@ function runShot(name) {
     viewFlashT = 4;
     viewKick = 0.06;
     hud.hitMarker(true, 60000);
-    hud.banner('Site B is hot', 'Runners mid — hold the lanes', 60000);
+    hud.banner('Contact — mid', 'Runners pushing mid — hold the lanes', 60000);
   } else {
     // end: the defuse, a breath after the round is won.
     match.phase = 'roundover';
@@ -883,6 +889,10 @@ function runShot(name) {
     hud.setAmmo(lo.mags[lo.current], lo.reserves[lo.current]);
     hud.setGrenades(lo.grenades.frag, lo.grenades.flash, lo.grenadeInHand);
   }
+  // The frame loop never runs in shot mode, so paint the minimap once here —
+  // the same call the loop makes — or the dossier frames show an empty box.
+  playerFighter.forward.set(-Math.sin(player.state.yaw), 0, -Math.cos(player.state.yaw));
+  hud.drawMinimap(world, fighters, { pos: player.state.position, forward: playerFighter.forward }, []);
   paintTwiceThenReady();
 }
 

@@ -138,8 +138,11 @@ export function spreadFor(spec, speed, { aiming = false, crouching = false } = {
 // --- View models -----------------------------------------------------------
 
 const gripMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(PALETTE.hairline), roughness: 0.7, metalness: 0.25 });
-const bodyMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(PALETTE.muted), roughness: 0.45, metalness: 0.4 });
+// The receiver finish: the palette's muted steel darkened toward gunmetal, so
+// a gun reads as a dark weapon silhouette against the warm dusk, not a slab.
+const bodyMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(PALETTE.muted).multiplyScalar(0.55), roughness: 0.5, metalness: 0.45 });
 const darkMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(PALETTE.surface), roughness: 0.6, metalness: 0.3 });
+const accentMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(PALETTE.accent), roughness: 0.45, metalness: 0.3 });
 
 function part(geo, mat, x, y, z) {
   const mesh = new THREE.Mesh(geo, mat);
@@ -157,6 +160,7 @@ export function buildViewModel(id) {
     model.add(part(new THREE.BoxGeometry(0.045, 0.05, 0.24), bodyMat, 0, 0.03, -0.08));
   } else if (id === 'smg') {
     model.add(part(new THREE.BoxGeometry(0.07, 0.11, 0.34), bodyMat, 0, 0, -0.08));
+    model.add(part(new THREE.BoxGeometry(0.02, 0.014, 0.08), accentMat, 0, 0.062, -0.22)); // top stripe
     model.add(part(new THREE.BoxGeometry(0.04, 0.04, 0.2), gripMat, 0, 0.02, -0.32));
     model.add(part(new THREE.BoxGeometry(0.05, 0.16, 0.06), darkMat, 0, -0.12, -0.06));
     model.add(part(new THREE.BoxGeometry(0.06, 0.07, 0.16), gripMat, 0, -0.03, 0.16));
@@ -168,6 +172,7 @@ export function buildViewModel(id) {
   } else {
     // carbine
     model.add(part(new THREE.BoxGeometry(0.075, 0.1, 0.44), bodyMat, 0, 0, -0.1));
+    model.add(part(new THREE.BoxGeometry(0.02, 0.014, 0.09), accentMat, 0, 0.058, -0.3)); // top rail stripe
     model.add(part(new THREE.BoxGeometry(0.04, 0.04, 0.3), gripMat, 0, 0.03, -0.42));
     model.add(part(new THREE.BoxGeometry(0.05, 0.15, 0.06), darkMat, 0, -0.12, -0.08));
     model.add(part(new THREE.BoxGeometry(0.065, 0.08, 0.2), gripMat, 0, -0.02, 0.24));
@@ -178,27 +183,46 @@ export function buildViewModel(id) {
 }
 
 export function buildMuzzleFlash() {
-  // A radial-gradient sprite (white-hot core fading through orange to
-  // transparent), additively blended: reads as a flash bloom, never as a
+  // A star flash: a white-hot core with four long spikes on the cross axes
+  // and four shorter diagonal ones, additively blended. The sprite rolls as
+  // it fades, so it reads as a real muzzle burst from any angle, never as a
   // solid card in front of the gun.
   const canvas = document.createElement('canvas');
   canvas.width = 128;
   canvas.height = 128;
   const g = canvas.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 2, 64, 64, 64);
-  grad.addColorStop(0, 'rgba(255,246,220,1)');
-  grad.addColorStop(0.25, 'rgba(255,196,110,0.85)');
-  grad.addColorStop(0.6, 'rgba(255,140,58,0.35)');
-  grad.addColorStop(1, 'rgba(255,120,40,0)');
-  g.fillStyle = grad;
+  const core = g.createRadialGradient(64, 64, 2, 64, 64, 30);
+  core.addColorStop(0, 'rgba(255,246,220,1)');
+  core.addColorStop(0.5, 'rgba(255,196,110,0.75)');
+  core.addColorStop(1, 'rgba(255,140,58,0)');
+  g.fillStyle = core;
   g.fillRect(0, 0, 128, 128);
+  for (let i = 0; i < 8; i += 1) {
+    const length = i % 2 === 0 ? 62 : 34;
+    const halfWidth = i % 2 === 0 ? 7 : 4.5;
+    g.save();
+    g.translate(64, 64);
+    g.rotate((i * Math.PI) / 4);
+    const spike = g.createLinearGradient(0, 0, length, 0);
+    spike.addColorStop(0, 'rgba(255,230,180,0.95)');
+    spike.addColorStop(0.55, 'rgba(255,160,70,0.5)');
+    spike.addColorStop(1, 'rgba(255,120,40,0)');
+    g.fillStyle = spike;
+    g.beginPath();
+    g.moveTo(0, -halfWidth);
+    g.lineTo(length, 0);
+    g.lineTo(0, halfWidth);
+    g.closePath();
+    g.fill();
+    g.restore();
+  }
   const texture = new THREE.CanvasTexture(canvas);
   const flash = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.34, 0.34),
+    new THREE.PlaneGeometry(0.42, 0.42),
     new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }),
   );
   flash.visible = false;
-  const light = new THREE.PointLight(new THREE.Color(PALETTE.accent), 0, 6);
+  const light = new THREE.PointLight(new THREE.Color(PALETTE.accent), 0, 9);
   return { flash, light };
 }
 
