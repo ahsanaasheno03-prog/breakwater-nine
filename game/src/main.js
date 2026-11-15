@@ -53,7 +53,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 // Filmic tone mapping with a gentle exposure lift: the dusk scene keeps its
 // mood, but shadow detail and the sodium highlights stop crushing to black.
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.12;
+renderer.toneMappingExposure = 1.28;
 document.getElementById('game').appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -797,8 +797,8 @@ function runShot(name) {
   if (name === 'start') {
     match.phase = 'live';
     match.round = 1;
-    player.placeAt(new THREE.Vector3(0.5, 0, -12.6), Math.PI - 0.15);
-    player.state.pitch = 0.05;
+    player.placeAt(new THREE.Vector3(-1.5, 0, -13.5), Math.PI - 0.35);
+    player.state.pitch = 0.1;
     stageBot(wardens[0], -4.5, -9, Math.PI, 'carbine');
     stageBot(wardens[1], 5, -10, Math.PI, 'carbine');
     stageBot(runners[0], -6, 2, 0, 'carbine');
@@ -816,7 +816,7 @@ function runShot(name) {
     playerFighter.loadout.current = 'carbine';
     playerFighter.loadout.grenades.frag = 1;
     player.placeAt(world.spawns.warden[0], Math.PI - 0.28);
-    player.state.pitch = 0.02;
+    player.state.pitch = 0.08;
     stageBot(wardens[0], -1.8, -14.4, Math.PI, 'carbine');
     stageBot(runners[0], -5, 14, 0, 'smg');
     hud.openBuy(3, buyItems(), match.money, () => {}, () => {});
@@ -849,7 +849,9 @@ function runShot(name) {
     viewFlashT = 4;
     viewKick = 0.06;
     hud.hitMarker(true, 60000);
-    hud.banner('Contact — mid', 'Runners pushing mid — hold the lanes', 60000);
+    // No banner in this frame: the staged fight — flash, hit marker, the
+    // Runner in the sight line — is the picture, and a centre-screen title
+    // would sit on top of all three.
   } else {
     // end: the defuse, a breath after the round is won.
     match.phase = 'roundover';

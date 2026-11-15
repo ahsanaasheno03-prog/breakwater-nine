@@ -69,7 +69,7 @@ function groundTexture() {
   canvas.width = 1024;
   canvas.height = 768;
   const g = canvas.getContext('2d');
-  g.fillStyle = '#333d47';
+  g.fillStyle = '#3d4956';
   g.fillRect(0, 0, 1024, 768);
   for (let i = 0; i < 9000; i += 1) {
     g.fillStyle = `rgba(${Math.random() > 0.5 ? '255,255,255' : '0,0,0'},${Math.random() * 0.06})`;
@@ -143,7 +143,7 @@ export function createWorld(scene) {
     }),
   );
   scene.add(sky);
-  scene.fog = new THREE.Fog(new THREE.Color('#574434'), 36, 120);
+  scene.fog = new THREE.Fog(new THREE.Color('#6b5138'), 44, 135);
 
   // Ground slab.
   const ground = new THREE.Mesh(
@@ -190,7 +190,7 @@ export function createWorld(scene) {
   box(2.4, 2.6, 6, 8.5, -10.5, contA);
   box(6, 2.6, 2.4, -8, 8, contC);
   box(6, 2.6, 2.4, 8, 8, contC);
-  box(2.4, 2.6, 6, 0, 12, contA);
+  box(2.4, 2.6, 6, 0, 12, contC);
 
   // Crates: crouch-height cover, 1.1 m.
   const crateMat = material('hairline', 0.95);
@@ -229,7 +229,7 @@ export function createWorld(scene) {
   // Lamp posts: sodium points of light down the lanes (visual poles; the
   // lights themselves are cheap points with distance falloff, no shadows).
   const lampMat = material('hairline', 0.6);
-  for (const [x, z] of [[-7, -5.5], [7, -5.5], [-7, 5.5], [7, 5.5], [0, -14.5]]) {
+  for (const [x, z] of [[-7, -5.5], [7, -5.5], [-7, 5.5], [7, 5.5], [0, -14.5], [-14, -14.5], [14, -14.5]]) {
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 4.6, 8), lampMat);
     pole.position.set(x, 2.3, z);
     register(pole, { shoot: false });
@@ -243,8 +243,8 @@ export function createWorld(scene) {
 
   // Light: a low warm key (the setting sun off the water), a cool fill, and a
   // sky/ground gradient so shadows never go black.
-  scene.add(new THREE.HemisphereLight(new THREE.Color('#8fa8c8'), new THREE.Color('#3a2a1a'), 1.6));
-  const sun = new THREE.DirectionalLight(new THREE.Color('#ffb37a'), 2.8);
+  scene.add(new THREE.HemisphereLight(new THREE.Color('#a8c0dc'), new THREE.Color('#4a3420'), 1.85));
+  const sun = new THREE.DirectionalLight(new THREE.Color('#ffb37a'), 3.1);
   sun.position.set(-18, 16, 10);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -255,13 +255,13 @@ export function createWorld(scene) {
   sun.shadow.camera.far = 70;
   sun.shadow.bias = -0.0006;
   scene.add(sun, sun.target);
-  const fill = new THREE.DirectionalLight(new THREE.Color('#7d94b8'), 1.2);
+  const fill = new THREE.DirectionalLight(new THREE.Color('#7d94b8'), 1.4);
   fill.position.set(14, 10, -12);
   scene.add(fill);
 
   // Distant silhouettes: two port cranes beyond the north wall, depth for the
   // skyline. No colliders, no bullet stops; pure backdrop.
-  const silhouette = new THREE.MeshBasicMaterial({ color: new THREE.Color('#131a24') });
+  const silhouette = new THREE.MeshBasicMaterial({ color: new THREE.Color('#1d2c40') });
   for (const baseX of [-30, 26]) {
     const legL = new THREE.Mesh(new THREE.BoxGeometry(1.2, 17, 1.2), silhouette);
     legL.position.set(baseX - 5, 8.5, -26);

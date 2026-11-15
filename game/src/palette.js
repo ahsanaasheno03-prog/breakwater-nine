@@ -20,5 +20,5 @@ export const TEAM_COLORS = {
 // A dusk gradient the world paints on the sky dome: a sodium-amber band at the
 // horizon (the sun just set over the water) rising to a deep harbour blue, so
 // the skyline reads as evening rather than a void.
-export const SKY_TOP = '#2b4d75';
-export const SKY_HORIZON = '#b06c34';
+export const SKY_TOP = '#38679c';
+export const SKY_HORIZON = '#d98a42';
